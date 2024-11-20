@@ -37,6 +37,19 @@ class MyAppState extends ChangeNotifier {
     // 可以使用 notifyListeners 来让当前 class 的 ChangeNotifierProvider 的节点被通知到更新状态
     notifyListeners();
   }
+
+  var favorites = <WordPair>{};
+
+  void toggleFavorite() {
+    if (favorites.contains(currentWord)) {
+      // 不得不说，这个 remove 方法很先进啊（bushi
+      favorites.remove(currentWord);
+    } else {
+      favorites.add(currentWord);
+    }
+    // 最后记得要通知更新
+    notifyListeners();
+  }
 }
 
 class MyHomePage extends StatelessWidget {
@@ -45,6 +58,7 @@ class MyHomePage extends StatelessWidget {
     // 这个就是一个 "store"
     var appState = context.watch<MyAppState>();
     var word = appState.currentWord;
+    var isContained = appState.favorites.contains(word);
 
     return Scaffold(
       body: Center(
@@ -55,12 +69,29 @@ class MyHomePage extends StatelessWidget {
             SizedBox(height: 10),
             BigCard(word: word),
             // flutter 这样添加按钮
-            ElevatedButton(
-                onPressed: () {
-                  print("haha");
-                  appState.getNextWord();
-                },
-                child: Text("点一下就会爆炸!"))
+
+            Row(
+              // 可以和之前一样，用 mainAxisAlignment 实现水平居中
+              // mainAxisAlignment: MainAxisAlignment.center,
+              // 但是为了练习，我们用 mainAxisSize 实现
+              // 它相当于把 div 变成了 span （但是为啥能居中？其实我没看懂
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ElevatedButton(
+                    onPressed: () {
+                      appState.toggleFavorite();
+                    },
+                    // 当然，其实全局（可以直接访问）还有专门的 Icons，用 Icons.favorite 就能访问
+                    child: Text(isContained ? "❤️爱了!" : "💔不爱了!")),
+                SizedBox(width: 10),
+                ElevatedButton(
+                    onPressed: () {
+                      print("haha");
+                      appState.getNextWord();
+                    },
+                    child: Text("换一个!")),
+              ],
+            )
           ],
         ),
       ),
