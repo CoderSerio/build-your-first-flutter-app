@@ -1,16 +1,22 @@
-# hello_flutter
+# Random Words
 
-A new Flutter project.
+[中文](README_CN.md) | English
 
-## Getting Started
+A Flutter starter project that generates random word pairs. This project is implemented following the [Flutter first app codelab](https://docs.flutter.dev/get-started/codelab).
 
-This project is a starting point for a Flutter application.
+## Features
 
-A few resources to get you started if this is your first Flutter project:
+- Generate infinite random word pairs
+- Save favorite word pairs
+- View and manage favorites list
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## Screenshots
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+### Main Screen - Word Generation
+![Main Screen](public/homePage.png)
+
+### Favorites List
+![Favorites List](public/managementPage.png)
+
+### Rotate Screen
+![Rotate Screen](public/styleWhenRotated.png)
