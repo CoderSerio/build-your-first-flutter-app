@@ -19,7 +19,8 @@ class MyApp extends StatelessWidget {
         title: 'Namer App',
         theme: ThemeData(
           useMaterial3: true,
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepOrange),
+          colorScheme: ColorScheme.fromSeed(
+              seedColor: /*Colors.deepOrange*/ Color(0xFF00FF00)),
         ),
         home: MyHomePage(),
       ),
@@ -43,20 +44,55 @@ class MyHomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     // 这个就是一个 "store"
     var appState = context.watch<MyAppState>();
+    var word = appState.currentWord;
 
     return Scaffold(
-      body: Column(
-        children: [
-          Text('A random AWESOME idea:'),
-          Text(appState.currentWord.asLowerCase),
-          // flutter 这样添加按钮
-          ElevatedButton(
-              onPressed: () {
-                print("haha");
-                appState.getNextWord();
-              },
-              child: Text("点一下就会爆炸"))
-        ],
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // Text('A random AWESOME idea:'),
+            SizedBox(height: 10),
+            BigCard(word: word),
+            // flutter 这样添加按钮
+            ElevatedButton(
+                onPressed: () {
+                  print("haha");
+                  appState.getNextWord();
+                },
+                child: Text("点一下就会爆炸!"))
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class BigCard extends StatelessWidget {
+  const BigCard({
+    super.key,
+    required this.word,
+  });
+
+  final WordPair word;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final style = theme.textTheme.displayLarge!
+        .copyWith(color: theme.colorScheme.onPrimary);
+
+    return Card(
+      color: theme.colorScheme.primary,
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Text(
+          word.asLowerCase, style: style,
+          // 这里我们其实拿到的是一个 word pairs，我们可以这样来做一个格式化
+          // 为什么要这样做呢，是因为 flutter 默认支持无障碍
+          // 如果不这样分割单词的话，可能会让文本被错误发音
+          semanticsLabel: "${word.first} ${word.second}",
+        ),
       ),
     );
   }
