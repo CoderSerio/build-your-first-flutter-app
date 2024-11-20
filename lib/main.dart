@@ -50,6 +50,11 @@ class MyAppState extends ChangeNotifier {
     // 最后记得要通知更新
     notifyListeners();
   }
+
+  void removeFavoriteWord(word) {
+    favorites.remove(word);
+    notifyListeners();
+  }
 }
 
 // ...
@@ -72,7 +77,7 @@ class _MyHomePageState extends State<MyHomePage> {
         break;
       case 1:
         // 是很先进的页面占位符
-        page = Placeholder();
+        page = FavoriteWordsPage();
         break;
       default:
         throw UnimplementedError('no widget for $selectedIndex');
@@ -117,6 +122,40 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       );
     });
+  }
+}
+
+class FavoriteWordsPage extends StatelessWidget {
+  const FavoriteWordsPage({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    var appState = context.watch<MyAppState>();
+
+    return ListView(
+      children: appState.favorites
+          .map((text) => (Row(children: [
+                Expanded(
+                  child: BigCard(
+                    wordPairs: text,
+                    operationButton: ElevatedButton(
+                      onPressed: () {
+                        appState.removeFavoriteWord(text);
+                      },
+                      child: Icon(Icons.delete_forever_sharp),
+                    ),
+                  ),
+                ),
+                // ElevatedButton.icon(
+                //   onPressed: () {},
+                //   icon: Icon(Icons.delete_forever_sharp),
+                //   label: Text('remove'),
+                // )
+              ])))
+          .toList(),
+    );
   }
 }
 
@@ -166,11 +205,9 @@ class GeneratorPage extends StatelessWidget {
 
 // ...
 class BigCard extends StatelessWidget {
-  const BigCard({
-    super.key,
-    required this.wordPairs,
-  });
+  const BigCard({super.key, required this.wordPairs, this.operationButton});
 
+  final Widget? operationButton;
   final WordPair wordPairs;
 
   @override
@@ -183,13 +220,20 @@ class BigCard extends StatelessWidget {
       color: theme.colorScheme.primary,
       child: Padding(
         padding: const EdgeInsets.all(20),
-        child: Text(
-          wordPairs.asLowerCase, style: style,
-          // 这里我们其实拿到的是一个 word pairs，我们可以这样来做一个格式化
-          // 为什么要这样做呢，是因为 flutter 默认支持无障碍
-          // 如果不这样分割单词的话，可能会让文本被错误发音
-          semanticsLabel: "${wordPairs.first} ${wordPairs.second}",
-        ),
+        child: Row(children: [
+          Expanded(
+            child: Text(
+              wordPairs.asLowerCase, style: style,
+              // 这里我们其实拿到的是一个 word pairs，我们可以这样来做一个格式化
+              // 为什么要这样做呢，是因为 flutter 默认支持无障碍
+              // 如果不这样分割单词的话，可能会让文本被错误发音
+              semanticsLabel: "${wordPairs.first} ${wordPairs.second}",
+            ),
+          ),
+          if (operationButton != null) ...[
+            operationButton!,
+          ]
+        ]),
       ),
     );
   }
