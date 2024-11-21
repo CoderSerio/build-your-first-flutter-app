@@ -18,5 +18,5 @@ A Flutter starter project that generates random word pairs. This project is impl
 ### Favorites List
 ![Favorites List](public/managementPage.png)
 
-### Rotate Screen
+### When Rotate Screen
 ![Rotate Screen](public/styleWhenRotated.png)
